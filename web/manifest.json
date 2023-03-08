@@ -1,6 +1,6 @@
 {
-    "name": "busca_cep_riverpod",
-    "short_name": "busca_cep_riverpod",
+    "name": "busca_cep_bloc",
+    "short_name": "busca_cep_bloc",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

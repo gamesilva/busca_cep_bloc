@@ -1,4 +1,4 @@
-import 'package:busca_cep_riverpod/models/cep_model.dart';
+import 'package:busca_cep_bloc/models/cep_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 

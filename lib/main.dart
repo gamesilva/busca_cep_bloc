@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:busca_cep_riverpod/counter.dart';
-import 'package:busca_cep_riverpod/services/cep_service.dart';
+import 'package:busca_cep_bloc/counter.dart';
+import 'package:busca_cep_bloc/services/cep_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,11 +18,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BlocProvider(
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<CounterCubit>(
+            create: (BuildContext context) => CounterCubit(),
+          )
+        ],
         child: MyHomePage(
           title: 'BlocTest',
         ),
-        create: (_) => CounterCubit(),
       ),
     );
   }

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.busca_cep_riverpod">
+    package="com.example.busca_cep_bloc">
    <application
-        android:label="busca_cep_riverpod"
+        android:label="busca_cep_bloc"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

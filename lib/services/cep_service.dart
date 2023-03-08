@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:busca_cep_riverpod/models/cep_model.dart';
-import 'package:busca_cep_riverpod/services/webservice/ws.dart';
+import 'package:busca_cep_bloc/models/cep_model.dart';
+import 'package:busca_cep_bloc/services/webservice/ws.dart';
 
 class CepService {
   WS ws = WS();
