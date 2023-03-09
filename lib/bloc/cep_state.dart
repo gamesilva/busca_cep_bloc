@@ -6,13 +6,14 @@ class CepState {
 
   const CepState._({
     this.cep,
-    this.status = CepStatus.loading,
+    this.status = CepStatus.none,
   });
 
-  const CepState.loading() : this._();
+  const CepState.none() : this._();
+  const CepState.loading() : this._(status: CepStatus.loading);
   const CepState.error() : this._(status: CepStatus.error);
   const CepState.success(CepModel cep)
       : this._(status: CepStatus.success, cep: cep);
 }
 
-enum CepStatus { loading, success, error }
+enum CepStatus { loading, success, error, none }

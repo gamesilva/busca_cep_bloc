@@ -6,21 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(MyApp(
-    cepService: CepService(),
-  ));
+  runApp(MyApp());
 }
 
-class MyApp extends MaterialApp {
-  MyApp({CepService cepService})
-      : super(
-          home: RepositoryProvider(
-            create: (context) => CepService(),
-            child: CepPage(
-              title: 'BlocTest',
-            ),
-          ),
-        );
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: RepositoryProvider(
+        create: (context) => CepService(),
+        child: CepPage(
+          title: 'BlocTest',
+        ),
+      ),
+    );
+  }
 }
 
 class CepPage extends StatelessWidget {
@@ -36,7 +37,7 @@ class CepPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => CepCubit(
           cepService: context.read<CepService>(),
-        )..fetchCep('37501591'),
+        ),
         child: CepView(),
       ),
     );
@@ -50,6 +51,9 @@ class CepView extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<CepCubit>().state;
     switch (state.status) {
+      case CepStatus.none:
+        return CepVisualization(cep: null);
+        break;
       case CepStatus.loading:
         return Center(child: CircularProgressIndicator());
         break;
@@ -77,7 +81,7 @@ class CepVisualization extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              cep.logradouro,
+              cep != null ? cep.logradouro : 'Digite o cep!',
               style: Theme.of(context).textTheme.headline6,
             ),
           ],

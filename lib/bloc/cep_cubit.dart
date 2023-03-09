@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CepCubit extends Cubit<CepState> {
   final CepService cepService;
 
-  CepCubit({@required this.cepService}) : super(CepState.loading());
+  CepCubit({@required this.cepService}) : super(CepState.none());
 
   fetchCep(String cepToFind) async {
     try {
