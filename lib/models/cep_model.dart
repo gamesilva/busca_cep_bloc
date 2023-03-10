@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class CepModel {
+class Cep {
   String cep;
   String logradouro;
   String complemento;
@@ -12,7 +12,7 @@ class CepModel {
   String ddd;
   String siafi;
 
-  CepModel({
+  Cep({
     this.cep,
     this.logradouro,
     this.complemento,
@@ -40,8 +40,8 @@ class CepModel {
     };
   }
 
-  factory CepModel.fromMap(Map<String, dynamic> map) {
-    return CepModel(
+  factory Cep.fromMap(Map<String, dynamic> map) {
+    return Cep(
       cep: map['cep'] ?? '',
       logradouro: map['logradouro'] ?? '',
       complemento: map['complemento'] ?? '',
@@ -57,6 +57,5 @@ class CepModel {
 
   String toJson() => json.encode(toMap());
 
-  factory CepModel.fromJson(String source) =>
-      CepModel.fromMap(json.decode(source));
+  factory Cep.fromJson(String source) => Cep.fromMap(json.decode(source));
 }
