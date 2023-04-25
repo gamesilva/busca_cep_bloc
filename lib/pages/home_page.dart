@@ -1,6 +1,7 @@
 import 'package:busca_cep_bloc/bloc/home_bloc.dart';
 import 'package:busca_cep_bloc/bloc/home_event.dart';
 import 'package:busca_cep_bloc/bloc/home_state.dart';
+import 'package:busca_cep_bloc/models/cep_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,7 +29,9 @@ class HomePage extends StatelessWidget {
                   return Center(child: Text(state.errorMessage));
                 }
                 if (state is HomeStateSuccess) {
-                  return Center(child: Text(state.cep.toJson()));
+                  return Center(
+                    child: BuildListTile(cep: state.cep),
+                  );
                 }
                 if (state is HomeStateLoading) {
                   return Center(child: CircularProgressIndicator());
@@ -37,14 +40,17 @@ class HomePage extends StatelessWidget {
               },
             ),
           ),
-          Row(
-            children: <Widget>[
-              CepFormField(controllerMensagem: _controllerMensagem),
-              SearchButton(
-                controllerMensagem: _controllerMensagem,
-                homeBloc: homeBloc,
-              )
-            ],
+          Container(
+            height: 120,
+            child: Row(
+              children: <Widget>[
+                CepFormField(controllerMensagem: _controllerMensagem),
+                SearchButton(
+                  controllerMensagem: _controllerMensagem,
+                  homeBloc: homeBloc,
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -85,7 +91,7 @@ class CepFormField extends StatelessWidget {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 isDense: true,
-                border: InputBorder.none,
+                border: OutlineInputBorder(),
                 hintText: "Cep",
               ),
             ),
@@ -122,9 +128,96 @@ class SearchButton extends StatelessWidget {
       ),
       onPressed: () async {
         homeBloc.add(HomeEventFetchCep(cepABuscar: _controllerMensagem.text));
-        _controllerMensagem.clear();
       },
       child: Icon(Icons.send),
+    );
+  }
+}
+
+class BuildListTile extends StatelessWidget {
+  final Cep cep;
+  const BuildListTile({Key key, this.cep}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('Cep'),
+                subtitle: Text(cep.cep),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('Logradouro'),
+                subtitle: Text(cep.logradouro),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('Complemento'),
+                subtitle: Text(cep.complemento),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('Bairro'),
+                subtitle: Text(cep.bairro),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('Localidade'),
+                subtitle: Text(cep.localidade),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('UF'),
+                subtitle: Text(cep.uf),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('IBGE'),
+                subtitle: Text(cep.ibge),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('DDD'),
+                subtitle: Text(cep.ddd),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('SIAFI'),
+                subtitle: Text(cep.siafi),
+              ),
+            ),
+            Card(
+              elevation: 5,
+              child: ListTile(
+                title: Text('GIA'),
+                subtitle: Text(cep.gia),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
