@@ -17,8 +17,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<HomeState> _fetchList(String cepAProcurar) async {
-    Cep cep = await CepService().getCepInfos(cepAProcurar);
+    Map<String, dynamic> cepMap = await CepService().getCepInfos(cepAProcurar);
 
-    return HomeStateSuccess(cep: cep);
+    if (!cepMap.containsKey("Error")) {
+      Cep cep = Cep.fromMap(cepMap);
+      return HomeStateSuccess(cep: cep);
+    }
+
+    return HomeStateError(errorMessage: cepMap["Error"]);
   }
 }
