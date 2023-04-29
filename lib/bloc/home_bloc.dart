@@ -13,13 +13,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       if (!StringUtils.stringTest(event.cepABuscar)) {
         emit(HomeStateError(errorMessage: 'Digite um cep!'));
-      } else {
-        if (event.cepABuscar.length < MAX_CEP_LENGTH) {
-          emit(HomeStateError(errorMessage: 'O cep deve conter 8 dígitos!'));
-        } else {
-          emit(await _fetchList(event.cepABuscar));
-        }
+        return;
       }
+
+      if (event.cepABuscar.length < MAX_CEP_LENGTH) {
+        emit(HomeStateError(errorMessage: 'O cep deve conter 8 dígitos!'));
+        return;
+      }
+
+      emit(await _fetchList(event.cepABuscar));
     });
   }
 
