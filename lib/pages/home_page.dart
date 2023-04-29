@@ -2,6 +2,7 @@ import 'package:busca_cep_bloc/bloc/home_bloc.dart';
 import 'package:busca_cep_bloc/bloc/home_event.dart';
 import 'package:busca_cep_bloc/bloc/home_state.dart';
 import 'package:busca_cep_bloc/models/cep_model.dart';
+import 'package:busca_cep_bloc/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,22 +14,57 @@ class HomePage extends StatelessWidget {
     final homeBloc = BlocProvider.of<HomeBloc>(context);
     TextEditingController _controllerMensagem = TextEditingController();
 
+    Cep cepToSave;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('BuscaCep'),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            iconSize: 28,
+            icon: Icon(Icons.save),
+            onPressed: () {
+              if (cepToSave != null) {
+                print("Eu vou começar o processo para salvar o CEP aqui!");
+              }
+            },
+          )
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Container(
+            color: Colors.grey[200],
+            height: 80,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: <Widget>[
+                  CepFormField(controllerMensagem: _controllerMensagem),
+                  SearchButton(
+                    controllerMensagem: _controllerMensagem,
+                    homeBloc: homeBloc,
+                  )
+                ],
+              ),
+            ),
+          ),
           Expanded(
             child: BlocBuilder<HomeBloc, HomeState>(
               bloc: BlocProvider.of<HomeBloc>(context),
               builder: (context, state) {
                 if (state is HomeStateError) {
-                  return Center(child: Text(state.errorMessage));
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                  );
                 }
                 if (state is HomeStateSuccess) {
+                  cepToSave = state.cep;
                   return Center(
                     child: BuildListTile(cep: state.cep),
                   );
@@ -40,18 +76,6 @@ class HomePage extends StatelessWidget {
               },
             ),
           ),
-          Container(
-            height: 120,
-            child: Row(
-              children: <Widget>[
-                CepFormField(controllerMensagem: _controllerMensagem),
-                SearchButton(
-                  controllerMensagem: _controllerMensagem,
-                  homeBloc: homeBloc,
-                )
-              ],
-            ),
-          )
         ],
       ),
     );
@@ -79,21 +103,19 @@ class CepFormField extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             color: Colors.white,
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 6),
-            child: TextField(
-              maxLines: 2,
-              scrollPadding: EdgeInsets.only(
-                top: 0,
+          child: TextField(
+            maxLength: 8,
+            maxLines: 1,
+            cursorColor: Colors.black,
+            controller: _controllerMensagem,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              counterText: "",
+              isDense: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
-              cursorColor: Colors.black,
-              controller: _controllerMensagem,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                isDense: true,
-                border: OutlineInputBorder(),
-                hintText: "Cep",
-              ),
+              hintText: "Cep",
             ),
           ),
         ),
@@ -127,7 +149,11 @@ class SearchButton extends StatelessWidget {
         ),
       ),
       onPressed: () async {
-        homeBloc.add(HomeEventFetchCep(cepABuscar: _controllerMensagem.text));
+        if (!StringUtils.stringTest(_controllerMensagem.text)) {
+          showSnackBar(context, "Digite um cep...");
+        } else {
+          homeBloc.add(HomeEventFetchCep(cepABuscar: _controllerMensagem.text));
+        }
       },
       child: Icon(Icons.send),
     );
@@ -220,4 +246,16 @@ class BuildListTile extends StatelessWidget {
       ),
     );
   }
+}
+
+showSnackBar(BuildContext context, String mensagem) {
+  SnackBar snackBar = SnackBar(
+    content: Text(
+      mensagem,
+      style: TextStyle(fontSize: 18),
+    ),
+    behavior: SnackBarBehavior.floating,
+  );
+
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

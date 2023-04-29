@@ -19,6 +19,14 @@ class MyApp extends StatelessWidget {
           ..add(HomeEventFetchCep(cepABuscar: '')),
         child: HomePage(),
       ),
+      theme: ThemeData(
+        textTheme: TextTheme(
+          headline1: TextStyle(
+            fontSize: 24,
+            color: Colors.grey[900],
+          ),
+        ),
+      ),
     );
   }
 }

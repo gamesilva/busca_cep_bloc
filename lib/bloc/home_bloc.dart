@@ -2,16 +2,23 @@ import 'package:busca_cep_bloc/bloc/home_event.dart';
 import 'package:busca_cep_bloc/bloc/home_state.dart';
 import 'package:busca_cep_bloc/models/cep_model.dart';
 import 'package:busca_cep_bloc/services/cep_service.dart';
+import 'package:busca_cep_bloc/utils/string_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  static const int MAX_CEP_LENGTH = 8;
   HomeBloc(HomeState initialState) : super(HomeStateLoading()) {
     on<HomeEventFetchCep>((event, emit) async {
-      if (event.cepABuscar != null && event.cepABuscar.length > 0) {
-        emit(HomeStateLoading());
-        emit(await _fetchList(event.cepABuscar));
+      emit(HomeStateLoading());
+
+      if (!StringUtils.stringTest(event.cepABuscar)) {
+        emit(HomeStateError(errorMessage: 'Digite um cep!'));
       } else {
-        emit(HomeStateError(errorMessage: 'Digite um cep'));
+        if (event.cepABuscar.length < MAX_CEP_LENGTH) {
+          emit(HomeStateError(errorMessage: 'O cep deve conter 8 dígitos!'));
+        } else {
+          emit(await _fetchList(event.cepABuscar));
+        }
       }
     });
   }
