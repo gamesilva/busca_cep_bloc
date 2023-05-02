@@ -1,4 +1,3 @@
-import 'package:busca_cep_bloc/models/cep_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeState {}
@@ -12,7 +11,7 @@ class HomeStateError extends HomeState {
 }
 
 class HomeStateSuccess extends HomeState {
-  final Cep cep;
+  final List<Map<String, dynamic>> cep;
 
   HomeStateSuccess({@required this.cep});
 }

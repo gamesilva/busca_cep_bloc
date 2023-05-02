@@ -1,6 +1,5 @@
 import 'package:busca_cep_bloc/bloc/home_event.dart';
 import 'package:busca_cep_bloc/bloc/home_state.dart';
-import 'package:busca_cep_bloc/models/cep_model.dart';
 import 'package:busca_cep_bloc/services/cep_service.dart';
 import 'package:busca_cep_bloc/utils/string_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +24,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Map<String, dynamic> cepMap = await CepService().getCepInfos(cepAProcurar);
 
     if (!cepMap.containsKey("Error")) {
-      Cep cep = Cep.fromMap(cepMap);
-      return HomeStateSuccess(cep: cep);
+      List<Map<String, dynamic>> cepPropertyList = [];
+      for (var chave in cepMap.keys) {
+        cepPropertyList.add({chave: cepMap[chave]});
+      }
+      return HomeStateSuccess(cep: cepPropertyList);
     }
 
     return HomeStateError(errorMessage: cepMap["Error"]);

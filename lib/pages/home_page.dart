@@ -1,7 +1,6 @@
 import 'package:busca_cep_bloc/bloc/home_bloc.dart';
 import 'package:busca_cep_bloc/bloc/home_event.dart';
 import 'package:busca_cep_bloc/bloc/home_state.dart';
-import 'package:busca_cep_bloc/models/cep_model.dart';
 import 'package:busca_cep_bloc/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +13,7 @@ class HomePage extends StatelessWidget {
     final homeBloc = BlocProvider.of<HomeBloc>(context);
     TextEditingController _controllerMensagem = TextEditingController();
 
-    Cep cepToSave;
+    List<Map<String, dynamic>> cepToSave;
 
     return Scaffold(
       appBar: AppBar(
@@ -161,88 +160,39 @@ class SearchButton extends StatelessWidget {
 }
 
 class BuildListTile extends StatelessWidget {
-  final Cep cep;
+  final List<Map<String, dynamic>> cep;
   const BuildListTile({Key key, this.cep}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('Cep'),
-                subtitle: Text(cep.cep),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('Logradouro'),
-                subtitle: Text(cep.logradouro),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('Complemento'),
-                subtitle: Text(cep.complemento),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('Bairro'),
-                subtitle: Text(cep.bairro),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('Localidade'),
-                subtitle: Text(cep.localidade),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('UF'),
-                subtitle: Text(cep.uf),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('IBGE'),
-                subtitle: Text(cep.ibge),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('DDD'),
-                subtitle: Text(cep.ddd),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('SIAFI'),
-                subtitle: Text(cep.siafi),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: ListTile(
-                title: Text('GIA'),
-                subtitle: Text(cep.gia),
+            Expanded(
+              child: ListView.builder(
+                itemCount: cep.length,
+                itemBuilder: (context, index) {
+                  return _buildCardInfoCep(
+                    cep[index].entries.first.key,
+                    cep[index].entries.first.value,
+                  );
+                },
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCardInfoCep(String title, String subtitle) {
+    return Card(
+      elevation: 5,
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(subtitle),
       ),
     );
   }
