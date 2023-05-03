@@ -56,9 +56,14 @@ class HomePage extends StatelessWidget {
               builder: (context, state) {
                 if (state is HomeStateError) {
                   return Center(
-                    child: Text(
-                      state.errorMessage,
-                      style: Theme.of(context).textTheme.headline1,
+                    child: Wrap(
+                      children: [
+                        Text(
+                          state.errorMessage,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -191,8 +196,14 @@ class BuildListTile extends StatelessWidget {
     return Card(
       elevation: 5,
       child: ListTile(
-        title: Text(title),
-        subtitle: Text(subtitle),
+        title: Text(
+          StringUtils.stringTest(title)
+              ? formatCepTitle(title)
+              : 'Sem Informação',
+        ),
+        subtitle: Text(
+          StringUtils.stringTest(subtitle) ? subtitle : 'Sem Informação',
+        ),
       ),
     );
   }
@@ -208,4 +219,14 @@ showSnackBar(BuildContext context, String mensagem) {
   );
 
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
+String formatCepTitle(String value) {
+  if (value.length > 5) {
+    return StringUtils.captalize(value);
+  } else if (value == 'cep') {
+    return StringUtils.captalize(value);
+  } else {
+    return value.toUpperCase();
+  }
 }

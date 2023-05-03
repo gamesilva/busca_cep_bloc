@@ -9,9 +9,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc(HomeState initialState) : super(HomeStateLoading()) {
     on<HomeEventFetchCep>((event, emit) async {
       emit(HomeStateLoading());
-
       if (!StringUtils.stringTest(event.cepABuscar)) {
         emit(HomeStateError(errorMessage: 'Digite um cep!'));
+      } else if (event.cepABuscar.contains(new RegExp(r'[a-z]'))) {
+        emit(HomeStateError(errorMessage: 'O cep não deve conter letras!'));
+      } else if (event.cepABuscar.contains(" ")) {
+        emit(HomeStateError(
+            errorMessage: 'O cep não pode conter espaços em branco!'));
       } else if (event.cepABuscar.length < MAX_CEP_LENGTH) {
         emit(HomeStateError(errorMessage: 'O cep deve conter 8 dígitos!'));
       } else {
@@ -23,14 +27,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<HomeState> _fetchList(String cepAProcurar) async {
     Map<String, dynamic> cepMap = await CepService().getCepInfos(cepAProcurar);
 
-    if (!cepMap.containsKey("Error")) {
-      List<Map<String, dynamic>> cepPropertyList = [];
-      for (var chave in cepMap.keys) {
-        cepPropertyList.add({chave: cepMap[chave]});
-      }
-      return HomeStateSuccess(cep: cepPropertyList);
+    if (cepMap.containsKey('invalidFormat')) {
+      return HomeStateError(errorMessage: cepMap["invalidFormat"]);
     }
 
-    return HomeStateError(errorMessage: cepMap["Error"]);
+    if (cepMap.containsKey('absentCep')) {
+      return HomeStateError(errorMessage: cepMap['absentCep']);
+    }
+
+    List<Map<String, dynamic>> cepPropertyList = [];
+    for (var chave in cepMap.keys) {
+      cepPropertyList.add({chave: cepMap[chave]});
+    }
+    return HomeStateSuccess(cep: cepPropertyList);
   }
 }
